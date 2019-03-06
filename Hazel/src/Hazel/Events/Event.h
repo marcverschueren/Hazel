@@ -1,15 +1,17 @@
 #pragma once
 
+#include "hzpch.h"
 #include "Hazel/Core.h"
-#include <string>
 
 namespace Hazel {
+
 	// Events in Hazel are currently blocking, meaning when an event occurs it
 	// immediately gets dispatched and must be dealt with right then an there.
 	// For the future, a better strategy might be to buffer events in an event
 	// Bus and process them during the "event" part of the update stage.
 
-	enum class EventType {
+	enum class EventType 
+	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus,WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
@@ -17,7 +19,8 @@ namespace Hazel {
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
-	enum EventCategory {
+	enum EventCategory 
+	{
 		None = 0,
 		EventCategoryApplication = BIT(0),
 		EventCategoryInput = BIT(1),
@@ -32,8 +35,9 @@ namespace Hazel {
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category;}
 
-	class HAZEL_API Event {
-		friend class EVentDispatcher;
+	class HAZEL_API Event 
+	{
+		friend class EventDispatcher;
 	public:
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
@@ -51,10 +55,11 @@ namespace Hazel {
 	class EventDispatcher 
 	{
 		template<typename T>
-		using EventFn = std::is_function<bool(T&)>;
+		using EventFn = std::function<bool(T&)>;
 	public:
-		EventDispatcher(Event& event) : m_Event(event) {
-
+		EventDispatcher(Event& event)
+			: m_Event(event) 
+		{
 		}
 
 		template<typename T>
